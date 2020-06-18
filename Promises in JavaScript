@@ -1,3 +1,6 @@
+Promise in Javascript 
+This lets asynchronous methods return values like synchronous methods: instead of immediately returning the final value, the asynchronous method returns a promise to supply the value at some point in the future.
+Eg1:
 let promiseToCleanTheRoom = new Promise(function(resolve, reject) {
 
   //cleaning the room
@@ -17,3 +20,40 @@ promiseToCleanTheRoom.then(function(fromResolve) {
 }).catch(function(fromReject){
 	console.log('the room is' + fromReject);
 })
+
+Eg2: nested promises.
+let cleanRoom = function() {
+  return new Promise(function(resolve, reject) {
+    resolve('Cleaned The Room');
+  });
+};
+
+let removeGarbage = function(message) {
+  return new Promise(function(resolve, reject) {
+    resolve(message + ' remove Garbage');
+  });
+};
+
+let winIcecream = function(message) {
+  return new Promise(function(resolve, reject) {
+    resolve( message + ' won Icecream');
+  });
+};
+
+cleanRoom().then(function(result){
+	return removeGarbage(result);
+}).then(function(result){
+	return winIcecream(result);
+}).then(function(result){
+	console.log('finished ' + result);
+})
+
+Eg3: If we want execute all promises at once
+Promise.all([cleanRoom(), removeGarbage(), winIcecream()]).then( function() {
+console.log(‘all finished’);
+});
+
+Eg4: If we want execute one promises at once
+Promise.race([cleanRoom(), removeGarbage(), winIcecream()]).then( function() {
+console.log(‘one of them is finished’);
+});
